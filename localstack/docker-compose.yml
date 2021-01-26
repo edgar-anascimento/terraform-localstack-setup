@@ -1,0 +1,23 @@
+version: "3.2"
+services:
+  localstack:
+    image: localstack/localstack:latest
+    container_name: localstack
+    ports:
+      - 53:53
+      - 443:443
+      - "4510-4520:4510-4520"
+      - "4566-4620:4566-4620"
+    environment:
+      - SERVICES=
+      - DATA_DIR=/tmp/localstack/data
+      - DEBUG=1
+      - DEFAULT_REGION=us-east-1
+      - USE_SSL=true
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - ./.localstack:/tmp/localstack
+      - "/var/run/docker.sock:/var/run/docker.sock"
+volumes:
+  localstack-vol:
+    external: true

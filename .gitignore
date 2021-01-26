@@ -1,0 +1,12 @@
+# ide
+.idea
+.vscode
+
+# terraform
+.terraform
+*.hcl
+.tfstate
+.backup
+
+# localstack
+.localstack
