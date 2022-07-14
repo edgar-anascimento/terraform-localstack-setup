@@ -5,7 +5,7 @@ provider "aws" {
   skip_credentials_validation = true
   skip_requesting_account_id  = true
   skip_metadata_api_check     = true
-  s3_force_path_style         = true
+  s3_use_path_style           = true
   endpoints {
     apigateway     = "http://localhost:4566"
     cloudformation = "http://localhost:4566"
@@ -31,23 +31,31 @@ provider "aws" {
 
 resource "aws_s3_bucket" "terraform_state" {
   bucket = "terraform-state"
-  acl    = "private"
-
-  versioning {
-    enabled = true
-  }
-
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm = "AES256"
-      }
-    }
-  }
 
   lifecycle {
     prevent_destroy = true
   }
+}
+
+resource "aws_s3_bucket_versioning" "terraform_state_versioning" {
+  bucket = aws_s3_bucket.terraform_state.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "terraform_state_encryption" {
+  bucket = aws_s3_bucket.terraform_state.id
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
+}
+
+resource "aws_s3_bucket_acl" "terraform_state_acl" {
+  bucket = aws_s3_bucket.terraform_state.id
+  acl    = "private"
 }
 
 resource "aws_s3_bucket_public_access_block" "terraform_state_access" {

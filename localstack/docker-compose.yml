@@ -9,7 +9,6 @@ services:
       - "4510-4520:4510-4520"
       - "4566-4620:4566-4620"
     environment:
-      - SERVICES=
       - DATA_DIR=/tmp/localstack/data
       - DEBUG=1
       - DEFAULT_REGION=us-east-1
